@@ -1,5 +1,6 @@
 import wx, cv2
 import numpy as np
+from wx.core import VERTICAL
 
 
 class AppFrame(wx.Frame):
@@ -21,7 +22,7 @@ class AppFrame(wx.Frame):
         menubar = wx.MenuBar()
         filemenu = wx.Menu()
 
-        fileopen = filemenu.Append(wx.ID_FILE, "Open", "Open an image")
+        fileopen = filemenu.Append(wx.ID_OPEN, "Open", "Open an image")
         filequit = filemenu.Append(wx.ID_EXIT, "Quit", "Quit application")
 
         menubar.Append(filemenu, "&File")
@@ -58,7 +59,19 @@ class PanelWithButtons(wx.Panel):
     def __init__(self, parent): 
         super().__init__(parent)
 
-        wx.Button(self, label = "Help me")
+        vbox = wx.BoxSizer(orient=wx.VERTICAL)
+        b1 = wx.Button(self, label = "Geometric filter")
+        b2 = wx.Button(self, label = "Erosion")
+        b3 = wx.Button(self, label = "Dilation")
+        b4 = wx.Button(self, label = "Averaging")
+
+        vbox.Add(b1, wx.ID_ANY, wx.EXPAND | wx.ALL, 20)  
+        vbox.Add(b2, wx.ID_ANY, wx.EXPAND | wx.ALL, 20)   
+        vbox.Add(b3, wx.ID_ANY, wx.EXPAND | wx.ALL, 20)   
+        vbox.Add(b4, wx.ID_ANY, wx.EXPAND | wx.ALL, 20)         
+
+
+        self.SetSizer(vbox)
 
         self.SetBackgroundColour((225, 225, 225))
 
