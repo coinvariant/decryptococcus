@@ -2,6 +2,9 @@ import wx, cv2
 import numpy as np
 from wx.core import OR_INVERT, VERTICAL
 
+IMAGE = None
+IMAGE_BUFFER = None
+
 
 class AppFrame(wx.Frame):
 
@@ -47,14 +50,11 @@ class AppFrame(wx.Frame):
                 self.load_file()
 
     def load_file(self):
+        global IMAGE, IMAGE_BUFFER
+
         img = cv2.imread(self.image_path[0])
-        img = cv2.cvtColor(np.uint8(img), cv2.COLOR_BGR2RGB) 
-
-        h, w = img.shape[:2]
-
-        # TODO: such reference needs to be dealt with
-
-        self.p2.bitmap = wx.Bitmap.FromBuffer(w, h, img)
+        IMAGE = cv2.cvtColor(np.uint8(img), cv2.COLOR_BGR2RGB)
+        IMAGE_BUFFER = IMAGE.copy() 
 
 
 class PanelWithButtons(wx.Panel):
@@ -120,8 +120,6 @@ class PanelWithImage(wx.Panel):
     def __init__(self, parent):
         super().__init__(parent)
 
-        self.bitmap = None
-
         wx.EVT_PAINT(self, self.on_paint)
 
         self.SetBackgroundColour((225, 225, 225))
@@ -129,7 +127,9 @@ class PanelWithImage(wx.Panel):
 
     def on_paint(self, e):
         canvas = wx.PaintDC(self)
-        canvas.DrawBitmap(self.bitmap, 30, 20)
+        h, w = IMAGE_BUFFER.shape[:2]
+        bmp = wx.Bitmap.FromBuffer(w, h, IMAGE_BUFFER)
+        canvas.DrawBitmap(bmp, 30, 20)
 
 
 
