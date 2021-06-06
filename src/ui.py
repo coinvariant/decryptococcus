@@ -100,19 +100,30 @@ class PanelWithButtons(wx.Panel):
     def OnGeometricPress(self, e):
         print("Geometric")
 
+        global IMAGE_BUFFER
+        IMAGE_BUFFER =  core.apply_geometric_spatial_filter(IMAGE_BUFFER, (3, 3))
+        frame.p2.Refresh()
+
     def OnAveragePress(self, e):
         print("Average")
 
         global IMAGE_BUFFER
-        IMAGE_BUFFER = core.apply_averaging_spatial_filter(
-            IMAGE_BUFFER, (4, 4))
+        IMAGE_BUFFER = core.apply_averaging_spatial_filter(IMAGE_BUFFER, (4, 4))
         frame.p2.Refresh()
 
     def OnGammaPress(self, e):
         print("Gamma")
 
+        global IMAGE_BUFFER
+        IMAGE_BUFFER =  core.apply_gamma_transform(IMAGE_BUFFER, 1, 2)
+        frame.p2.Refresh()
+
     def OnLogarithmicPress(self, e):
         print("Logarithmic")
+
+        global IMAGE_BUFFER
+        IMAGE_BUFFER =  core.apply_log_transform(IMAGE_BUFFER, 1)
+        frame.p2.Refresh()
 
 
 class PanelWithImage(wx.Panel):
