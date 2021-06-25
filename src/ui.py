@@ -52,6 +52,7 @@ class AppFrame(wx.Frame):
         img = cv2.imread(self.image_path[0])
         IMAGE = cv2.cvtColor(np.uint8(img), cv2.COLOR_BGR2RGB)
         IMAGE_BUFFER = IMAGE.copy()
+        frame.p2.Refresh()
 
 
 class PanelWithButtons(wx.Panel):
@@ -94,8 +95,18 @@ class PanelWithButtons(wx.Panel):
     def OnErosionPress(self, e):
         print("Erosion")
 
+        global IMAGE_BUFFER
+        kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3,3))
+        IMAGE_BUFFER = core.apply_erosion(IMAGE_BUFFER, kernel)
+        frame.p2.Refresh()
+
     def OnDilationPress(self, e):
         print("Dilation")
+
+        global IMAGE_BUFFER
+        kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3,3))
+        IMAGE_BUFFER = core.apply_dilation(IMAGE_BUFFER, kernel)
+        frame.p2.Refresh()
 
     def OnGeometricPress(self, e):
         print("Geometric")
