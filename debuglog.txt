@@ -1,0 +1,5 @@
+Segmentation
+[147.09164634  49.09178705 222.28386257]
+uint8
+Histogram
+Histogram

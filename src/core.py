@@ -44,39 +44,41 @@ def eliminate_blue_objects(image):
     image[:, :, 1] += s
     image[:, :, 2] += v
 
-    image = cv2.cvtColor(image, cv2.COLOR_HSV2BGR)
+    image = cv2.cvtColor(image, cv2.COLOR_HSV2RGB)
     return image
 
 
 def detect_edges(image):
-    cv2.imshow("coleor", image)
-    bl = eliminate_blue_objects(image)
-    cv2.imshow('blue', bl)
-    image = cv2.cvtColor(bl, cv2.COLOR_BGR2GRAY)
-    cv2.imshow("1", image)
+    # cv2.imshow("coleor", image)
+    image = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
+    # cv2.imshow("1", image)
     # image = cv2.bilateralFilter(image, 9, 75, 75)
     image = cv2.GaussianBlur(image, (5,5), 2)
-    cv2.imshow("2", image)
+    # cv2.imshow("2", image)
     edges = cv2.Laplacian(image, -1, ksize=3, scale=1)
-    cv2.imshow("edge", edges)
+    # cv2.imshow("edge", edges)
     ret, mask = cv2.threshold(edges, 0, 255, cv2.THRESH_BINARY+cv2.THRESH_OTSU)
-    cv2.imshow("mask", mask)
-    cv2.waitKey(0)
-    return mask
+    # cv2.imshow("mask", mask)
+    # cv2.waitKey(0)
+    return mask, cv2.cvtColor(mask, cv2.COLOR_GRAY2RGB)
 
 def analyze_connected_components(image):
     ret, labels, stats, centroids = cv2.connectedComponentsWithStats(image)
+    total_count = len(labels) + 1
+    raw_count = stats[:, cv2.CC_STAT_AREA]
+    return total_count, raw_count
 
 
 def run_automatic_segmentation(image):
+    image = eliminate_blue_objects(image)
     components = detect_edges(image)
-    data = analyze_connected_components(components)
-
+    return components
 
 if __name__ == "__main__":
     test1 = cv2.cvtColor(cv2.imread("./test/test1.jpg"), cv2.COLOR_BGR2RGB)
     test2 = cv2.cvtColor(cv2.imread("./test/test2.jpg"), cv2.COLOR_BGR2RGB)
     test3 = cv2.cvtColor(cv2.imread("./test/test3.jpg"), cv2.COLOR_BGR2RGB)
 
-    detect_edges(test1)
+    test2 = eliminate_blue_objects(test2)
+    detect_edges(test2)
     # exper(test1)    
